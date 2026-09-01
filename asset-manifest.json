@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.a66774c5.css",
+    "main.js": "/static/js/main.914d8005.js",
+    "static/js/451.f4df1510.chunk.js": "/static/js/451.f4df1510.chunk.js",
+    "static/js/453.b2f1fd03.chunk.js": "/static/js/453.b2f1fd03.chunk.js",
+    "static/media/checkin.svg": "/static/media/checkin.5194d46c8f9e8872ba361d723ce1e058.svg",
+    "static/media/KitBack.svg": "/static/media/KitBack.64d3ee023a6bac84676c6fba02aece61.svg",
+    "static/media/sopa.webp": "/static/media/sopa.2c2ff0e4cb028e9545de.webp",
+    "static/media/cocktail.svg": "/static/media/cocktail.a5df6fbd0b2977c39e6761cd92673122.svg",
+    "static/media/breakfast.svg": "/static/media/breakfast.7e982a6f7937dd1a52a90b372cf3f6a6.svg",
+    "static/media/Hightea.svg": "/static/media/Hightea.9e5afc17968c23e96cb2abd33dfe20fc.svg",
+    "index.html": "/index.html",
+    "static/media/lunch.svg": "/static/media/lunch.b86510f71f81e9e9cd651e6f455e2877.svg",
+    "static/media/dinner.svg": "/static/media/dinner.9cd2b4f335c92c5ba9449a707c8247d1.svg",
+    "main.a66774c5.css.map": "/static/css/main.a66774c5.css.map",
+    "main.914d8005.js.map": "/static/js/main.914d8005.js.map",
+    "451.f4df1510.chunk.js.map": "/static/js/451.f4df1510.chunk.js.map",
+    "453.b2f1fd03.chunk.js.map": "/static/js/453.b2f1fd03.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a66774c5.css",
+    "static/js/main.914d8005.js"
+  ]
+}

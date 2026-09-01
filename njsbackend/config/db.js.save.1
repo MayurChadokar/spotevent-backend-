@@ -1,0 +1,32 @@
+const { Sequelize } = require("sequelize");
+
+// Direct credentials (as provided)
+const DB_HOST = "89.116.133.1";
+const DB_USER = "u818631783_db";
+const DB_PASSWORD = "ch22UXqLsdyPwe198";
+const DB_DATABASE = "u818631783_db";
+const DB_TIMEZONE = "Asia/Kolkata";
+const DB_CONNECTION_LIMIT = 10;
+
+// Initialize Sequelize
+const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  dialect: "mysql",
+  logging: false,
+  pool: {
+    max: DB_CONNECTION_LIMIT,
+    min: 0,
+    idle: 10000,
+  },
+  timezone: DB_TIMEZONE || "+00:00", // Optional
+});
+
+// Test connection
+sequelize
+  .authenticate()
+  .then(() => console.log("✅ Database connected successfully!"))
+  .catch((err) =>
+    console.error("❌ Unable to connect to the database:", err)
+  );
+
+module.exports = sequelize;

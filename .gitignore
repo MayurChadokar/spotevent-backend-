@@ -1,0 +1,4 @@
+*.zip
+njsbackend/node_modules
+njsbackend/.env
+njsbackend/rmspro_stdout.log

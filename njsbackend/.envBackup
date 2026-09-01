@@ -1,0 +1,9 @@
+JWT_SECRET = "YASH@123"
+DB_HOST=localhost
+DB_USER=geecol1b_sopa_event	
+DB_PASSWORD=06*]osUiwlG&
+DB_DATABASE=geecol1b_sopaofficialdbs
+DB_TIMEZONE=Asia/Kolkata
+DB_CONNECTION_LIMIT=10
+PORT=8086
+DB_TIMEZONE=+05:30
