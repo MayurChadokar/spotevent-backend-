@@ -147,12 +147,42 @@ const getMasterEvent = async (req, res) => {
       where: {
         status: "1", // Correct field you are checking
       },
+      // Event times are entered in MySQL as IST wall-clock values. Format them
+      // in MySQL so JavaScript/Sequelize cannot apply a second conversion.
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(
+              "DATE_FORMAT(`start_date`, '%Y-%m-%dT%H:%i:%s+05:30')"
+            ),
+            "start_date_ist",
+          ],
+          [
+            Sequelize.literal(
+              "DATE_FORMAT(`end_date`, '%Y-%m-%dT%H:%i:%s+05:30')"
+            ),
+            "end_date_ist",
+          ],
+        ],
+      },
+      raw: true,
+    });
+
+    // Replace Sequelize's Date values with the exact IST values from MySQL.
+    const masterEventData = MasterEvent.map((event) => {
+      const data = { ...event };
+      data.start_date = data.start_date_ist;
+      data.end_date = data.end_date_ist;
+      delete data.start_date_ist;
+      delete data.end_date_ist;
+
+      return data;
     });
 
     res.status(200).json({
       status: true,
       message: "Active event data fetched successfully",
-      data: MasterEvent,
+      data: masterEventData,
     });
   } catch (error) {
     res.status(500).json({
