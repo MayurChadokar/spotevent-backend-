@@ -839,7 +839,7 @@ const getActivityType = async (req, res) => {
     let activity;
 
     // Choose activity source based on is_spot_registered
-    if (delegate.is_spot_registered === 1) {
+    if (delegate.is_spot_registered === 1 || delegate.is_spot_registered === 0) {
       activity = await ActivityMaster.findAll({
         where: {
           Is_Active: 1,
