@@ -897,11 +897,66 @@ const getActivityType = async (req, res) => {
 };
 
 // getSingleSpotRegistration
+// const getSingleUserInfo = async (req, res) => {
+//   try {
+//     const { id } = req.body; // Extract the 'id' from the request body
+
+//     // Check if the 'id' is provided
+//     if (!id) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "ID is required in the request body",
+//       });
+//     }
+
+//     const fees = await Delegate.findOne({
+//       where: {
+//         status: 1, // or 1
+//         id, // Filter by the provided 'id'
+//       },
+//       include: [
+//         {
+//           model: DelegateRegistration,
+//           attributes: ['GSTIN', 'deletegate_category', "organization_name"],
+          
+//         },
+//       ],
+//     });
+
+//     // If no fees found for the provided 'id'
+//     if (fees.length === 0) {
+//       return res.status(404).json({
+//         status: false,
+//         message: "No active payment fee data found for the given ID",
+//       });
+//     }
+    
+//      // Get activity restrictions
+//     const activity = await PersonActivityRestriction.findAll({
+//       where: { User_ID: id },
+//     });
+
+//     res.status(200).json({
+//       status: true,
+//       message: "Active payment fee data fetched successfully",
+//       data: {
+//         ...fees.toJSON(),
+//         activity, // ⬅️ Activity data added here without altering original structure
+//       },
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       status: false,
+//       message: "Failed to fetch active payment fee data",
+//       error: error.message,
+//     });
+//   }
+// };
+
 const getSingleUserInfo = async (req, res) => {
   try {
-    const { id } = req.body; // Extract the 'id' from the request body
+    const { id } = req.body;
 
-    // Check if the 'id' is provided
     if (!id) {
       return res.status(400).json({
         status: false,
@@ -911,47 +966,65 @@ const getSingleUserInfo = async (req, res) => {
 
     const fees = await Delegate.findOne({
       where: {
-        status: 1, // or 1
-        id, // Filter by the provided 'id'
+        status: 1,
+        id,
       },
       include: [
         {
           model: DelegateRegistration,
-          attributes: ['GSTIN', 'deletegate_category', "organization_name"],
-          
+          attributes: [
+            "GSTIN",
+            "deletegate_category",
+            "organization_name",
+          ],
         },
       ],
     });
 
-    // If no fees found for the provided 'id'
-    if (fees.length === 0) {
+    if (!fees) {
       return res.status(404).json({
         status: false,
         message: "No active payment fee data found for the given ID",
       });
     }
-    
-     // Get activity restrictions
+
     const activity = await PersonActivityRestriction.findAll({
-      where: { User_ID: id },
+      where: {
+        User_ID: id,
+      },
     });
 
-    res.status(200).json({
+    const userData = fees.toJSON();
+
+    if (userData.created_at) {
+      userData.created_at = new Date(userData.created_at)
+        .toISOString()
+        .replace("Z", "+05:30");
+    }
+
+    if (userData.updated_at) {
+      userData.updated_at = new Date(userData.updated_at)
+        .toISOString()
+        .replace("Z", "+05:30");
+    }
+
+    return res.status(200).json({
       status: true,
       message: "Active payment fee data fetched successfully",
       data: {
-        ...fees.toJSON(),
-        activity, // ⬅️ Activity data added here without altering original structure
+        ...userData,
+        activity,
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: false,
       message: "Failed to fetch active payment fee data",
       error: error.message,
     });
   }
 };
+
 
 // createRegistrationfromAdmin
 const createRegistrationfromAdmin = async (req, res) => {
