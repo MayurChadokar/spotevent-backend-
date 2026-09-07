@@ -14,13 +14,9 @@ const {
 const Sequelize = require("sequelize");
 const sequelize = require("../config/db");
 const { Op } = require("sequelize");
-const axios = require("axios");
 
 const nodemailer = require("nodemailer");
 const dayjs = require("dayjs");
-const puppeteer = require('puppeteer');
-const fs = require("fs");
-const path = require("path");
 require("dotenv").config();
 
 
@@ -1326,144 +1322,7 @@ const SendMailUsingNodemailer = async (req, res) => {
     };
     const eventEdition = getOrdinal(editionNumber);
 
-    const qrUrl =
-      "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" +
-      encodeURIComponent(`${delegate?.url_for_qr}`);
     const ImageUrl = "https://event.sopa.org/public/img/unnamed.png";
- const badgeHtml = 
-  `<html>
-    <head>
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        html, body {
-          width: 600px;
-          height: 850px;
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-        }
-        // .watermark-left,
-    // .watermark-right {
-    //   position: absolute;
-    //   top: 60%;
-    //   transform: translateY(-50%) rotate(90deg);
-    //   font-size: 60px;
-    //   color: rgba(0, 0, 0, 0.2);
-    //   font-weight: bold;
-    //   pointer-events: none;
-    //   z-index: 10;
-    //   white-space: nowrap;
-    // }
-     .watermark-left,
-    .watermark-right {
-  position: absolute;
-  bottom: 110px; /* 👈 aligned with QR's bottom: 40px + 10px buffer */
-  transform: rotate(90deg);
-  font-size: 60px;
-  color: rgba(0, 0, 0, 0.2);
-  font-weight: bold;
-  pointer-events: none;
-  z-index: 10;
-  white-space: nowrap;
-}
-
-    .watermark-left {
-      left: 10px;
-    }
-
-    .watermark-right {
-      right: 10px;
-    }
-      </style>
-    </head>
-    <body>
-      <div style="position: relative; width: 600px; height: 850px; margin: 0; padding: 0; background-image: url('https://event.sopa.org/public/img/BadgeCard-2025.png'); background-size: cover; background-repeat: no-repeat; background-position: center; text-align: center; font-family: Arial, sans-serif; color: #000;">
-      
-        <!-- DUMMY Watermark -->
-        <div class="watermark-left">DUMMY</div>
-    <div class="watermark-right">DUMMY</div>
-
-        <!-- Name -->
-        <div style="position: absolute; top: 470px; width: 100%; text-align: center;">
-          <h2 style="font-size: 40px; margin: 0; font-weight: bold;">${delegate?.name}</h2>
-        </div>
-      
-        <!-- Organization -->
-        <div style="position: absolute; top: 528px; width: 100%; text-align: center;">
-          <h3 style="font-size: 24px; margin: 0;">${delegate?.organization_name}</h3>
-          <div style="width: 200px; border-bottom: 2px solid #000; margin: 8px auto 0 auto;"></div>
-        </div>
-      
-        <!-- QR Code -->
-        <div style="position: absolute; bottom: 40px; width: 100%; text-align: center;">
-          <img src="${qrUrl}" alt="QR Code" style="width: 220px; height: 220px;" />
-        </div>
-      </div>
-    </body>
-  </html>`;
-
-
-        //  const path = require('path');
-      const printCardDir = path.join(__dirname, 'printCard');
-    // const printCardDir = "/home/geecol1b/public_html/rmspro.geecomindia.in/njsbackend/printCard";
-    if (!fs.existsSync(printCardDir)) {
-      fs.mkdirSync(printCardDir);
-    }
-    const imagePath = path.join(
-      printCardDir,
-      `${delegate?.name}-${req.body.id}.png`
-    );
-
-    // const browser = await puppeteer.launch({
-    //   defaultViewport: null, // Optional but safe to ensure override
-    // });
-    // const page = await browser.newPage();
-    // await page.setViewport({ width: 600, height: 850 });
-    // await page.setContent(badgeHtml, { waitUntil: "networkidle0" });
-
-    // // Only screenshot the exact badge area
-    // await page.screenshot({
-    //   path: imagePath,
-    //   type: "png",
-    //   clip: { x: 0, y: 0, width: 600, height: 850 },
-    // });
-    
-//     const browser = await puppeteer.launch({
-//   executablePath: '/root/.cache/puppeteer/chrome/linux-137.0.7151.55/chrome-linux64/chrome', // ✅ Use the installed Chrome
-//   headless: true,
-//   args: ['--no-sandbox', '--disable-setuid-sandbox'],
-//   defaultViewport: null
-// });
-
-const browser = await puppeteer.launch({
-  executablePath: '/root/.cache/puppeteer/chrome/linux-139.0.7258.68/chrome-linux64/chrome',
-  headless: true,
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--no-zygote',
-    '--single-process'
-  ]
-});
-const page = await browser.newPage();
-
-await page.setViewport({ width: 600, height: 850 });
-
-await page.setContent(badgeHtml, { waitUntil: 'networkidle0' });
-
-await page.screenshot({
-  path: imagePath,
-  type: 'png',
-  clip: { x: 0, y: 0, width: 600, height: 850 }
-});
-
-    await browser.close();
     const htmlContent = `
     <div style="background-color: #000; width: 600px; height: 90px; display: grid;">
         <img src=${ImageUrl} alt="Header Image" style="max-width:100%;height:50px; margin-left: auto; margin-right: auto; ">
@@ -1492,8 +1351,7 @@ await page.screenshot({
         <li><strong>Venue Location:</strong> <a href="https://www.google.com/maps">Click Here</a></li>
       </ul>
 
-      <p>You may collect your delegate badge at the registration counter by presenting the attached QR code or this email.</p>
-      <b> Please see the attachment for your personalized badge.</b>
+      <p>You may collect your delegate badge at the registration counter by presenting this email.</p>
       <h4>Conference Program & Details:</h4>
       <a href="https://event.sopa.org/">https://event.sopa.org/</a>
 
@@ -1531,12 +1389,6 @@ await page.screenshot({
       cc: "accounts@sopa.org",
       subject: `Delegate Registration Confirmation`,
       html: htmlContent,
-      attachments: [
-        {
-          filename: `${delegate?.name}-${req.body.id}.png`,
-          path: imagePath,
-        },
-      ],
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -1800,21 +1652,7 @@ const sendBulkMailUsingNodemailer = async (req, res) => {
     let successCount = 0;
     let failed = [];
 
-    const folderPath = path.join(__dirname, "printCard");
-    
     for (const delegate of delegates) {
-        // Find image by delegate ID (e.g., name-id.png)
-      const fileName = fs
-        .readdirSync(folderPath)
-        .find((file) => file.endsWith(`-${delegate.id}.png`));
-
-      if (!fileName) {
-        failed.push({ id: delegate.id, reason: "Image not found" });
-        continue;
-      }
-
-      const imagePath = path.join(folderPath, fileName);
-
       const htmlContent = `
       <div style="background-color: #000; width: 600px; height: 90px; display: grid;">
         <img src=${ImageUrl} alt="Header Image" style="max-width:100%;height:50px; margin-left: auto; margin-right: auto; ">
@@ -1843,8 +1681,7 @@ const sendBulkMailUsingNodemailer = async (req, res) => {
           <li><strong>Venue Location:</strong> <a href="https://www.google.com/maps">Click Here</a></li>
         </ul>
 
-        <p>You may collect your delegate badge at the registration counter by presenting the attached QR code or this email.</p>
-        <b> Please see the attachment for your personalized badge.</b>
+        <p>You may collect your delegate badge at the registration counter by presenting this email.</p>
         <h4>Conference Program & Details:</h4>
         <a href="https://event.sopa.org/">https://event.sopa.org/</a>
 
@@ -1866,12 +1703,6 @@ const sendBulkMailUsingNodemailer = async (req, res) => {
         cc: "accounts@sopa.org",
         subject: "Delegate Registration Confirmation",
         html: htmlContent,
-        attachments: [
-          {
-            filename: `${delegate.name}-${delegate.id}.png`,
-            path: imagePath,
-          },
-        ],
       };
 
       try {
@@ -1929,33 +1760,7 @@ const sendBulkMailtoPreRegisterdDeleget = async (req, res) => {
     let successCount = 0;
     let failed = [];
 
-    function sanitizeName(name) {
-  return name.replace(/[^A-Za-z0-9\-]/g, '_');
-}
-
-const folderUrl = "https://event.sopa.org/public/img/badges/";
-    
     for (const delegate of delegates) {
-        // Find image by delegate ID (e.g., name-id.png)
-        
-        const sanitizedName = sanitizeName(delegate.name);
-  const fileName = `badge_${delegate.id}_${sanitizedName}.png`;
-  const imageUrl = `${folderUrl}${fileName}`;
-  
-   console.log("Checking for delegate:", delegate.name);
-  console.log("Sanitized name:", sanitizedName);
-  console.log("Final badge image URL:", imageUrl);
-  
-
-  try {
-    // Check if image exists (returns 200 if found)
-    await axios.head(imageUrl);
-  } catch (err) {
-    failed.push({ id: delegate.id, reason: "Image not found (404)" });
-    continue;
-  }
-
-
       const htmlContent = `
       <div style="background-color: #000; width: 600px; height: 90px; display: grid;">
         <img src=${ImageUrl} alt="Header Image" style="max-width:100%;height:50px; margin-left: auto; margin-right: auto; ">
@@ -1984,8 +1789,7 @@ const folderUrl = "https://event.sopa.org/public/img/badges/";
           <li><strong>Venue Location:</strong> <a href="https://www.google.com/maps">Click Here</a></li>
         </ul>
 
-        <p>You may collect your delegate badge at the registration counter by presenting the attached QR code or this email.</p>
-        <b> Please see the attachment for your personalized badge.</b>
+        <p>You may collect your delegate badge at the registration counter by presenting this email.</p>
         <h4>Conference Program & Details:</h4>
         <a href="https://event.sopa.org/">https://event.sopa.org/</a>
 
@@ -2007,12 +1811,6 @@ const folderUrl = "https://event.sopa.org/public/img/badges/";
         cc: "accounts@sopa.org",
         subject: "Delegate Registration Confirmation",
         html: htmlContent,
-        attachments: [
-          {
-            filename: fileName ,
-            path: imageUrl,
-          },
-        ],
       };
 
       try {
